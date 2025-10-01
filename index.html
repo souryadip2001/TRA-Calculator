@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Optimal TRA Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .form-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      width: 350px;
+    }
+    .form-container h2 {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    .form-container label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    .form-container input {
+      width: 90%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    .form-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 15px;
+    }
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .submit-btn {
+      background: #4CAF50;
+      color: white;
+    }
+    .clear-btn {
+      background: #ddd;
+    }
+    .clear-btn:hover {
+      background: #bbb;
+    }
+    #result {
+      margin-top: 20px;
+      padding: 10px;
+      background: #f9f9f9;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>TRA Calculator</h2>
+    <form id="myForm">
+      <label>
+        Enter days:
+        <input type="number" id="firstField" placeholder="Total days you were in office">
+      </label>
+      <label>
+        Enter distance (Home to Office to Home):
+        <input type="number" id="secondField" placeholder="Total TO and FRO dist. in kms">
+      </label>
+      <div class="form-buttons">
+        <button type="submit" class="submit-btn">Calculate</button>
+        <button type="button" class="clear-btn" onclick="clearForm()">Clear</button>
+      </div>
+    </form>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById("myForm");
+    const resultDiv = document.getElementById("result");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const day = parseInt(document.getElementById("firstField").value);
+      const km = parseInt(document.getElementById("secondField").value);
+
+      if(day <= 0 || km <= 0){
+        resultDiv.innerHTML = "<p style='color:red;'>Please enter valid positive numbers!</p>";
+        return;
+      }
+	if (!day || !km) {
+    resultDiv.innerHTML = "<p style='color:red;'>Please fill both fields!</p>";
+    return;
+  }
+
+
+      let maxi = Number.MIN_SAFE_INTEGER;
+      let bestBike = 0, bestCar = 0;
+      let output = "<h3>Possible Combinations:</h3>";
+
+      for(let i = 0; i <= day; i++){
+        let cost = (i * 7 + (day - i) * 11.5) * km;
+        output += `<p>${i} day(s) bike and ${day - i} day(s) car: ${cost.toFixed(2)}</p>`;
+        if(cost <= 8000 && cost >= maxi){
+          maxi = cost;
+          bestBike = i;
+          bestCar = day - i;
+        }
+      }
+
+      output += `<h3>Optimal Combination:</h3>
+                 <p>${bestBike} day(s) bike and ${bestCar} day(s) car → Total Cost: ${maxi.toFixed(2)}</p>`;
+
+      resultDiv.innerHTML = output;
+    });
+
+    function clearForm(){
+      document.getElementById("firstField").value = "";
+      document.getElementById("secondField").value = "";
+      resultDiv.innerHTML = "";
+    }
+  </script>
+</body>
+</html>
